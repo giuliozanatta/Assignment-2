@@ -98,4 +98,14 @@ public class TakeAwayBillImplTest {
             e.printStackTrace();
         }
      }
+     
+     @Test(expected = RestaurantBillException.class)
+     public void Limit30ElementsTest() throws RestaurantBillException {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Mario", "Rossi", 23);
+         for(int i=0; i<50; i++) {
+             list.add(new MenuItem(ItemType.Gelati, "Coppa Arcobaleno", 9));
+         }
+         tab.getOrderPrice(list, user);
+     }
 }
