@@ -17,6 +17,10 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         double min = 0;
         double ord = 0;
         double tot = 0;
+        
+        if(itemsOrdered.size() > 30) {
+            throw new RestaurantBillException("ERROR: LIMITE DI 30 ELEMENTI.");
+        }
       
         for(int i=0; i<itemsOrdered.size(); i++) {
             if(itemsOrdered.get(i).getItemType()==ItemType.Gelati) {
