@@ -1,0 +1,2 @@
+[![Build Status](https://travis-ci.com/giuliozanatta/Assignment-2.svg?branch=master)](https://travis-ci.com/giuliozanatta/Assignment-2)
+[![Coverage Status](https://coveralls.io/repos/github/giuliozanatta/Assignment-2/badge.svg?branch=master)](https://coveralls.io/github/giuliozanatta/Assignment-2?branch=master)
