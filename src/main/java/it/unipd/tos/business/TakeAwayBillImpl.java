@@ -15,6 +15,7 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         throws RestaurantBillException {
         double numGelati = 0;
         double min = 0;
+        double ord = 0;
         double tot = 0;
       
         for(int i=0; i<itemsOrdered.size(); i++) {
@@ -28,13 +29,21 @@ public class TakeAwayBillImpl implements TakeAwayBill {
                 }
                 numGelati++;
             }
+            
+            if(itemsOrdered.get(i).getItemType()!=ItemType.Bevande) {
+                ord += itemsOrdered.get(i).getPrice();
+            }
                
-               tot += itemsOrdered.get(i).getPrice();
+            tot += itemsOrdered.get(i).getPrice();
         }     
         
         if(numGelati > 5) {
             tot -= min/2;
        }
+        
+        if(ord > 50) {
+            tot -= tot*(0.1);
+        }
            
         return tot;
     }

@@ -64,4 +64,38 @@ public class TakeAwayBillImplTest {
             e.printStackTrace();
         }
      }
+     
+     @Test
+     public void TenPercentDiscountTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Mario", "Rossi", 23);
+         list.add(new MenuItem(ItemType.Gelati, "Coppa Amarena", 20));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa Cioccolato", 20));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa EisCaffe", 15));
+         list.add(new MenuItem(ItemType.Bevande, "Birra", 5));
+         
+         try {
+            assertEquals(54, tab.getOrderPrice(list, user), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
+     
+     @Test
+     public void TenAndFiftyDiscountTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Mario", "Rossi", 23);
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 9", 10));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 4", 10));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 3", 10));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 7", 10));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 4", 10));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 1", 5));
+         
+         try {
+            assertEquals(47.25, tab.getOrderPrice(list, user), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
 }
