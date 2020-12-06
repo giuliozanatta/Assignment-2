@@ -108,4 +108,18 @@ public class TakeAwayBillImplTest {
          }
          tab.getOrderPrice(list, user);
      }
+     
+     @Test
+     public void CommissionTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Mario", "Rossi", 23);
+         list.add(new MenuItem(ItemType.Bevande, "CocaCola", 5));
+         list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
+         
+         try {
+            assertEquals(8.5, tab.getOrderPrice(list, user), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
 }

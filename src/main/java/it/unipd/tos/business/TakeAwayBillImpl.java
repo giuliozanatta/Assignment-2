@@ -13,8 +13,9 @@ public class TakeAwayBillImpl implements TakeAwayBill {
     
     public double getOrderPrice(List<MenuItem> itemsOrdered, User user) 
         throws RestaurantBillException {
+        
         double numGelati = 0;
-        double min = 0;
+        double min = Double.MAX_VALUE;
         double ord = 0;
         double tot = 0;
         
@@ -24,20 +25,16 @@ public class TakeAwayBillImpl implements TakeAwayBill {
       
         for(int i=0; i<itemsOrdered.size(); i++) {
             if(itemsOrdered.get(i).getItemType()==ItemType.Gelati) {
-                if(numGelati == 0) {
+                if(itemsOrdered.get(i).getPrice()<min) {
                     min = itemsOrdered.get(i).getPrice();
-                }else {
-                    if(itemsOrdered.get(i).getPrice()<min) {
-                        min = itemsOrdered.get(i).getPrice();
-                    }
                 }
                 numGelati++;
-            }
-            
-            if(itemsOrdered.get(i).getItemType()!=ItemType.Bevande) {
                 ord += itemsOrdered.get(i).getPrice();
-            }
-               
+            }else {
+                if(itemsOrdered.get(i).getItemType()!=ItemType.Bevande) {
+                    ord += itemsOrdered.get(i).getPrice();
+                }
+            } 
             tot += itemsOrdered.get(i).getPrice();
         }     
         
@@ -47,6 +44,10 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         
         if(ord > 50) {
             tot -= tot*(0.1);
+        }else {
+            if(tot != 0 && tot < 10) {
+                tot += 0.5;
+            }
         }
            
         return tot;
