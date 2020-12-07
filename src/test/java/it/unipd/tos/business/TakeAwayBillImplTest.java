@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
@@ -20,10 +21,11 @@ import it.unipd.tos.model.User;
 public class TakeAwayBillImplTest {
      
      private static TakeAwayBillImpl tab;
+     private static ArrayList<User> gifted = new ArrayList<User>();
      
      @BeforeClass
      public static void beforeClass() {
-          tab = new TakeAwayBillImpl();
+         tab = new TakeAwayBillImpl();   
      }
      
      @Test
@@ -35,7 +37,7 @@ public class TakeAwayBillImplTest {
           list.add(new MenuItem(ItemType.Gelati, "Coppa Nafta", 10));
           
           try {
-               assertEquals(23, tab.getOrderPrice(list, user), 0);
+               assertEquals(23, tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted), 0);
           } catch (RestaurantBillException e) {
                
                e.printStackTrace();
@@ -59,7 +61,7 @@ public class TakeAwayBillImplTest {
          list.add(new MenuItem(ItemType.Bevande, "Fanta", 5));
          
          try {
-            assertEquals(42.5, tab.getOrderPrice(list, user), 0);
+            assertEquals(42.5, tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted), 0);
         } catch (RestaurantBillException e) {
             e.printStackTrace();
         }
@@ -75,7 +77,7 @@ public class TakeAwayBillImplTest {
          list.add(new MenuItem(ItemType.Bevande, "Birra", 5));
          
          try {
-            assertEquals(54, tab.getOrderPrice(list, user), 0);
+            assertEquals(54, tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted), 0);
         } catch (RestaurantBillException e) {
             e.printStackTrace();
         }
@@ -93,7 +95,7 @@ public class TakeAwayBillImplTest {
          list.add(new MenuItem(ItemType.Gelati, "Coppa 1", 5));
          
          try {
-            assertEquals(47.25, tab.getOrderPrice(list, user), 0);
+            assertEquals(47.25, tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted), 0);
         } catch (RestaurantBillException e) {
             e.printStackTrace();
         }
@@ -106,9 +108,9 @@ public class TakeAwayBillImplTest {
          for(int i=0; i<50; i++) {
              list.add(new MenuItem(ItemType.Gelati, "Coppa Arcobaleno", 9));
          }
-         tab.getOrderPrice(list, user);
+         tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted);
      }
-     
+    
      @Test
      public void CommissionTest() {
          List<MenuItem> list = new ArrayList<MenuItem>();
@@ -117,7 +119,69 @@ public class TakeAwayBillImplTest {
          list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
          
          try {
-            assertEquals(8.5, tab.getOrderPrice(list, user), 0);
+            assertEquals(8.5, tab.getOrderPrice(list, user, LocalTime.of(18, 22), gifted), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
+
+     @Test
+     public void UnderAgeGiftTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Mario", "Rossi", 13);
+         list.add(new MenuItem(ItemType.Bevande, "CocaCola", 5));
+         list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
+         
+         try {
+            assertEquals(0, tab.getOrderPrice(list, user, LocalTime.of(18, 0), gifted), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
+     
+     @Test
+     public void UnderAgeGiftRepeatedTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Marco", "Alberti", 13);
+         gifted.add(user);
+         list.add(new MenuItem(ItemType.Bevande, "CocaCola", 5));
+         list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
+         
+         try {
+            assertEquals(8.5, tab.getOrderPrice(list, user, LocalTime.of(18, 0), gifted), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
+     
+     @Test
+     public void OverAgeGiftTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Giulio", "Stefani", 23);
+         gifted.add(user);
+         list.add(new MenuItem(ItemType.Bevande, "CocaCola", 5));
+         list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 2", 3));
+         list.add(new MenuItem(ItemType.Bevande, "Caffè", 1));
+         
+         try {
+            assertEquals(12, tab.getOrderPrice(list, user, LocalTime.of(18, 50), gifted), 0);
+        } catch (RestaurantBillException e) {
+            e.printStackTrace();
+        }
+     }
+     
+     @Test
+     public void NineteenHourTest() {
+         List<MenuItem> list = new ArrayList<MenuItem>();
+         User user = new User("Stefano", "Lazzaroni", 15);
+         list.add(new MenuItem(ItemType.Bevande, "CocaCola", 5));
+         list.add(new MenuItem(ItemType.Budini, "Caramello", 3));
+         list.add(new MenuItem(ItemType.Gelati, "Coppa 2", 3));
+         list.add(new MenuItem(ItemType.Bevande, "Caffè", 1));
+         
+         try {
+            assertEquals(0, tab.getOrderPrice(list, user, LocalTime.of(19, 0), gifted), 0);
         } catch (RestaurantBillException e) {
             e.printStackTrace();
         }
