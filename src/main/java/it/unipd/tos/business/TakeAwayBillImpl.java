@@ -25,8 +25,9 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         if(itemsOrdered.size() > 30) {
             throw new RestaurantBillException("ERROR: LIMITE DI 30 ELEMENTI.");
         }
-        
-        if(gifted.contains(user)==false && user.getAge() < 18) {
+       
+        if(gifted.size()<10 && gifted.contains(user)==false 
+                && user.getAge() < 18) {
             if(((now.getHour() == 18 && now.getMinute() >= 0) 
                     || now.getHour() == 19) && rand.nextInt()%2 == 0) {
                          gifted.add(user);    
